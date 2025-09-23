@@ -1,0 +1,9 @@
+<library path="lib/libquadrotor_hw_sim">
+    <class
+            name="quadrotor_gazebo/QuadrotorHWSim" type="quadrotor_gazebo::QuadrotorHWSim"
+            base_class_type="gazebo_ros_control::RobotHWSim">
+        <description>
+            The quadrotor robot simulation interface.
+        </description>
+    </class>
+</library>
