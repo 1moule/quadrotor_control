@@ -2,6 +2,11 @@
 
 <robot name="quadrotor" xmlns:xacro="http://www.ros.org/wiki/xacro">
     <xacro:include filename="$(find quadrotor_description)/urdf/quadrotor.urdf.xacro"/>
-    <!--    <xacro:include filename="$(find quadrotor_description)/urdf/quadrotor_plugins.gazebo.xacro" />-->
+    <gazebo>
+        <plugin name="gazebo_ros_control" filename="libquadrotor_hw_sim.so">
+            <robotNamespace>/</robotNamespace>
+            <robotSimType>quadrotor_gazebo/QuadrotorHWSim</robotSimType>
+        </plugin>
+    </gazebo>
 </robot>
 
