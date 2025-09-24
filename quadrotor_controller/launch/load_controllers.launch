@@ -1,11 +1,11 @@
 <launch>
-    <arg name="odom_tf" default="true"/>
+    <arg name="odom_tf" default="false"/>
 
     <rosparam file="$(find quadrotor_controller)/config/controllers.yaml" command="load"/>
     <param name="taskFile" value="$(find quadrotor_controller)/config/mpc/task.info"/>
     <!-- The library folder to generate CppAD codegen into -->
     <param name="libFolder" value="$(find quadrotor_controller)/auto_generated"/>
-    
+
     <node name="controller_loader" pkg="controller_manager" type="controller_manager" output="screen"
           args="load
           controllers/quadrotor_controller

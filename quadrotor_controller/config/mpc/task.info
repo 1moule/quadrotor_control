@@ -1,7 +1,7 @@
 ; quadrotor parameters
 QuadrotorParameters
 {
-  quadrotorMass   1.447
+  quadrotorMass   1.717
   Thzz            0.0218
   Thxxyy          0.01152
   gravity         9.81
@@ -113,10 +113,10 @@ Q
   (5,5)   20.0     ; yaw
   (6,6)   10.0     ; u
   (7,7)   10.0     ; v
-  (8,8)   5.0     ; w
+  (8,8)   10.0     ; w
   (9,9)   10.0      ; p
   (10,10) 10.0      ; q
-  (11,11) 0.0      ; r
+  (11,11) 10.0      ; r
 }
 
 ; control weight matrix

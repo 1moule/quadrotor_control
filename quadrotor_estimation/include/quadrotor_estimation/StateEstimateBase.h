@@ -12,6 +12,7 @@
 #include <ocs2_pinocchio_interface/PinocchioEndEffectorKinematics.h>
 #include <realtime_tools/realtime_publisher.h>
 #include <ros/ros.h>
+#include <tf2_msgs/TFMessage.h>
 
 namespace quadrotor_estimation
 {
@@ -44,6 +45,7 @@ protected:
   std::shared_ptr<realtime_tools::RealtimePublisher<nav_msgs::Odometry>> odomPub_;
   std::shared_ptr<realtime_tools::RealtimePublisher<geometry_msgs::PoseWithCovarianceStamped>>
     posePub_;
+  std::shared_ptr<realtime_tools::RealtimePublisher<tf2_msgs::TFMessage>> tfPub_;
   ros::Time lastPub_;
 };
 
