@@ -16,6 +16,8 @@ bool QuadrotorController::init(
   auto * wrenchInterface = robot_hw->get<hardware_interface::QuadrotorWrenchInterface>();
   wrench_handle_ = wrenchInterface->getHandle("wrench");
 
+  stateEstimate_ = std::make_shared<quadrotor_estimation::FromTopicStateEstimate>();
+
   // Initialize OCS2
   std::string taskFile;
   std::string libFolder;
@@ -54,7 +56,9 @@ void QuadrotorController::starting(const ros::Time & time)
 
 void QuadrotorController::updateEstimation(const ros::Time & time, const ros::Duration period)
 {
-  //TODO:Update the state estimation here
+  measuredRbdState_ = stateEstimate_->update(time, period);
+  //  currentObservation_.time += period.toSec();
+  currentObservation_.state = measuredRbdState_;
   mpcMrtInterface_->setCurrentObservation(currentObservation_);
 }
 

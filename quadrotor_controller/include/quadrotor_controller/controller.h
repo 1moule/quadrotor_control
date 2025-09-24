@@ -11,6 +11,7 @@
 #include <ocs2_mpc/MPC_MRT_Interface.h>
 #include <ocs2_msgs/mpc_observation.h>
 #include <quadrotor_common/wrench_interface.h>
+#include <quadrotor_estimation/FromTopiceEstimate.h>
 #include <quadrotor_interface/QuadrotorInterface.h>
 
 namespace quadrotor_controller
@@ -32,14 +33,16 @@ private:
   void setupMrt();
   void updateEstimation(const ros::Time & time, const ros::Duration period);
 
+  // Handle
   hardware_interface::QuadrotorWrenchHandle wrench_handle_;
 
-  //mpc
-  // Interface
+  // Ocs2 interface
   std::shared_ptr<quadrotor_interface::QuadrotorInterface> quadrotor_interface_;
 
   // State Estimation
+  ocs2::vector_t measuredRbdState_;
   ocs2::SystemObservation currentObservation_;
+  std::shared_ptr<quadrotor_estimation::FromTopicStateEstimate> stateEstimate_;
 
   // MPC
   std::shared_ptr<ocs2::MPC_BASE> mpc_;

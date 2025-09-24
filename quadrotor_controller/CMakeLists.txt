@@ -15,6 +15,7 @@ find_package(catkin REQUIRED
 
         quadrotor_common
         quadrotor_interface
+        quadrotor_estimation
 
         controller_interface
         effort_controllers
@@ -43,6 +44,7 @@ catkin_package(
 
         quadrotor_common
         quadrotor_interface
+        quadrotor_estimation
 
         controller_interface
         effort_controllers
