@@ -55,8 +55,8 @@ void StateEstimateBase::updateLinear(const vector_t & pos, const vector_t & line
 void StateEstimateBase::publishMsgs(const nav_msgs::Odometry & odom)
 {
   ros::Time time = odom.header.stamp;
-  scalar_t publishRate = 200;
-  if (lastPub_ + ros::Duration(1. / publishRate) < time) {
+  scalar_t publishRate = 500;
+  if (lastPub_ + ros::Duration(1. / publishRate) <= time) {
     lastPub_ = time;
     if (odomPub_->trylock()) {
       odomPub_->msg_ = odom;

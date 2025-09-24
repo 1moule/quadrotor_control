@@ -56,6 +56,19 @@ void QuadrotorController::starting(const ros::Time & time)
   mpcRunning_ = true;
 }
 
+void QuadrotorController::stopping(const ros::Time & time)
+{
+  mpcRunning_ = false;
+  geometry_msgs::Wrench cmd;
+  cmd.force.x = 0;
+  cmd.force.y = 0;
+  cmd.force.z = 0;
+  cmd.torque.x = 0;
+  cmd.torque.y = 0;
+  cmd.torque.z = 0;
+  wrench_handle_.setCommand(cmd);
+}
+
 void QuadrotorController::updateEstimation(const ros::Time & time, const ros::Duration period)
 {
   measuredRbdState_ = stateEstimate_->update(time, period);
