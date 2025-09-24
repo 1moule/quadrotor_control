@@ -4,6 +4,8 @@
 
 #include "quadrotor_controller/controller.h"
 
+#include <ocs2_ros_interfaces/common/RosMsgConversions.h>
+
 #include <pluginlib/class_list_macros.hpp>
 
 namespace quadrotor_controller
@@ -57,8 +59,10 @@ void QuadrotorController::starting(const ros::Time & time)
 void QuadrotorController::updateEstimation(const ros::Time & time, const ros::Duration period)
 {
   measuredRbdState_ = stateEstimate_->update(time, period);
-  //  currentObservation_.time += period.toSec();
+  currentObservation_.time += period.toSec();
   currentObservation_.state = measuredRbdState_;
+  currentObservation_.state[3] = measuredRbdState_[5];
+  currentObservation_.state[5] = measuredRbdState_[3];
   mpcMrtInterface_->setCurrentObservation(currentObservation_);
 }
 
@@ -88,6 +92,10 @@ void QuadrotorController::update(const ros::Time & time, const ros::Duration & p
   cmd.torque.y = optimizedInput[2];
   cmd.torque.z = optimizedInput[3];
   wrench_handle_.setCommand(cmd);
+
+  currentObservation_.input = optimizedInput;
+  observationPublisher_.publish(
+    ocs2::ros_msg_conversions::createObservationMsg(currentObservation_));
 }
 
 void QuadrotorController::setupMpc(ros::NodeHandle & nh)
