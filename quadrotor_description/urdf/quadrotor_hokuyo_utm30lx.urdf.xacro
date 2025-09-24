@@ -25,5 +25,8 @@
         <origin xyz="0.05 -0.0 -0.25" rpy="0 0 0"/>
     </xacro:generic_camera>
 
+    <xacro:include filename="$(find quadrotor_description)/urdf/sensors/imu.xacro"/>
+    <xacro:IMU connected_to="base_link" imu_name="base_imu" xyz="0 0 0" rpy="0 0 0"/>
+
 </robot>
   

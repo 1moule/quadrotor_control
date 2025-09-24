@@ -10,7 +10,7 @@
     <node pkg="robot_localization" type="ekf_localization_node" name="robot_localization_ekf_node_map"
           clear_params="true" respawn="true" output="log">
         <remap from="set_pose" to="initialpose"/>
-        <rosparam command="load" file="$(find bipedal_wheel_localization)/config/robot_localization.yaml"/>
+        <rosparam command="load" file="$(find quadrotor_localization)/config/robot_localization.yaml"/>
     </node>
 
 </launch>

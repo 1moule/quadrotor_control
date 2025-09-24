@@ -1,5 +1,5 @@
 <launch>
-    <arg name="odom_tf" default="false"/>
+    <arg name="odom_tf" default="true"/>
 
     <rosparam file="$(find quadrotor_controller)/config/controllers.yaml" command="load"/>
     <param name="taskFile" value="$(find quadrotor_controller)/config/mpc/task.info"/>
