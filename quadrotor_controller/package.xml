@@ -34,6 +34,7 @@
     <build_depend>cmake_clang_tools</build_depend>
     <depend>roscpp</depend>
     <depend>quadrotor_common</depend>
+    <depend>quadrotor_interface</depend>
     <depend>controller_interface</depend>
     <depend>effort_controllers</depend>
     <depend>angles</depend>

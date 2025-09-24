@@ -14,6 +14,7 @@ find_package(catkin REQUIRED
         roscpp
 
         quadrotor_common
+        quadrotor_interface
 
         controller_interface
         effort_controllers
@@ -41,6 +42,7 @@ catkin_package(
         roscpp
 
         quadrotor_common
+        quadrotor_interface
 
         controller_interface
         effort_controllers
