@@ -1,7 +1,7 @@
 ; quadrotor parameters
 QuadrotorParameters
 {
-  quadrotorMass   1.717
+  quadrotorMass   2.117
   Thzz            0.0218
   Thxxyy          0.01152
   gravity         9.81
