@@ -1,0 +1,3 @@
+controllers:
+  quadrotor_controller:
+    type: quadrotor_controller/QuadrotorController

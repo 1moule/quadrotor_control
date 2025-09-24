@@ -1,9 +1,12 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(quadrotor_gazebo)
+project(quadrotor_controller)
+
+add_definitions(-Wno-enum-compare)
 
 ## Use C++14
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 ## Find catkin macros and libraries
 find_package(catkin REQUIRED
@@ -12,13 +15,13 @@ find_package(catkin REQUIRED
 
         quadrotor_common
 
-        gazebo_ros
-        gazebo_ros_control
+        controller_interface
+        effort_controllers
+        angles
+        tf2_ros
 )
 
-# Depend on system install of Gazebo
-find_package(gazebo REQUIRED)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
+find_package(Eigen3 REQUIRED)
 
 ###################################
 ## catkin specific configuration ##
@@ -32,16 +35,18 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
 catkin_package(
         INCLUDE_DIRS
         include
+        ${EIGEN3_INCLUDE_DIR}
         LIBRARIES
-        quadrotor_hw_sim
         CATKIN_DEPENDS
         roscpp
 
         quadrotor_common
 
-        gazebo_ros
-        gazebo_ros_control
-        DEPENDS
+        controller_interface
+        effort_controllers
+        angles
+        tf2_ros
+        LIBRARIES ${PROJECT_NAME}
 )
 
 ###########
@@ -49,61 +54,62 @@ catkin_package(
 ###########
 
 ## Specify additional locations of header files
-## Your package locations should be listed before other locations
 include_directories(
         include
         ${catkin_INCLUDE_DIRS}
-        ${GAZEBO_INCLUDE_DIRS}
+        ${EIGEN3_INCLUDE_DIR}
 )
 
-## Declare a cpp library
-add_library(quadrotor_hw_sim
-        src/quadrotor_hw_sim.cpp
+## Declare cpp executables
+add_library(${PROJECT_NAME}
+        src/controller.cpp
 )
 
-add_dependencies(quadrotor_hw_sim
-        ${catkin_EXPORTED_TARGETS}
-)
-
-target_link_libraries(quadrotor_hw_sim
+## Specify libraries to link executable targets against
+target_link_libraries(${PROJECT_NAME}
         ${catkin_LIBRARIES}
-        ${GAZEBO_LIBRARIES}
 )
+
+#########################
+###   CLANG TOOLING   ###
+#########################
+find_package(cmake_clang_tools QUIET)
+if (cmake_clang_tools_FOUND)
+    message(STATUS "Run clang tooling for target " ${PROJECT_NAME})
+    add_clang_tooling(
+            TARGETS ${PROJECT_NAME} legged_target_trajectories_publisher
+            SOURCE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_SOURCE_DIR}/include
+            CT_HEADER_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include
+            CF_WERROR
+    )
+endif (cmake_clang_tools_FOUND)
 
 #############
 ## Install ##
 #############
 
-## Mark executables and/or libraries for installation
-install(TARGETS quadrotor_hw_sim
+# Mark executables and/or libraries for installation
+install(
+        TARGETS ${PROJECT_NAME}
         ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
         LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
         RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
 # Mark cpp header files for installation
-install(DIRECTORY include/${PROJECT_NAME}/
+install(
+        DIRECTORY include/${PROJECT_NAME}/
         DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
         FILES_MATCHING PATTERN "*.h"
 )
 
 # Mark other files for installation
-install(DIRECTORY config launch worlds
-        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-)
-install(FILES quadrotor_hw_sim_plugin.xml
+install(
+        FILES quadrotor_controller_plugin.xml
         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
-#############
-## Testing ##
-#############
-
-#if (${CATKIN_ENABLE_TESTING})
-#  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
-#  ## Add gtest based cpp test target and link libraries
-#  catkin_add_gtest(${PROJECT_NAME}-test
-#      test/test_ros_package_template.cpp
-#      test/AlgorithmTest.cpp)
-#  target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME}_core)
-#endif ()
+install(
+        DIRECTORY launch
+        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)

@@ -6,6 +6,7 @@
 
 #include <gazebo_ros_control/default_robot_hw_sim.h>
 #include <hardware_interface/imu_sensor_interface.h>
+#include <quadrotor_common/wrench_interface.h>
 
 namespace quadrotor_gazebo
 {
@@ -29,11 +30,14 @@ public:
     gazebo::physics::ModelPtr parent_model, const urdf::Model * urdf_model,
     std::vector<transmission_interface::TransmissionInfo> transmissions) override;
   void readSim(ros::Time time, ros::Duration period) override;
+  void writeSim(ros::Time time, ros::Duration period) override;
 
 private:
   void parseImu(XmlRpc::XmlRpcValue & imuDatas, const gazebo::physics::ModelPtr & parentModel);
 
   hardware_interface::ImuSensorInterface imu_sensor_interface_;
+  hardware_interface::QuadrotorWrenchInterface wrench_interface_;
+  std::shared_ptr<hardware_interface::QuadrotorWrenchHandle> wrench_handle_;
   gazebo::physics::WorldPtr world_;
   std::list<ImuData> imu_datas_;
   ros::ServiceServer switch_imu_service_;

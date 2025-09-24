@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-    <name>quadrotor_gazebo</name>
+    <name>quadrotor_controller</name>
     <version>0.0.0</version>
-    <description>The quadrotor_gazebo package</description>
+    <description>The quadrotor_controller package</description>
 
     <!-- One maintainer tag required, multiple allowed, one person per tag -->
     <!-- Example:  -->
@@ -19,7 +19,7 @@
     <!-- Url tags are optional, but multiple are allowed, one per tag -->
     <!-- Optional attribute type can be: website, bugtracker, or repository -->
     <!-- Example: -->
-    <!-- <url type="website">http://wiki.ros.org/quadrotor_wheel_gazebo</url> -->
+    <!-- <url type="website">http://wiki.ros.org/spider_controller</url> -->
 
 
     <!-- Author tags are optional, multiple are allowed, one per tag -->
@@ -27,20 +27,21 @@
     <!-- Example: -->
     <!-- <author email="jane.doe@example.com">Jane Doe</author> -->
 
-
     <!-- buildtool_depend: dependencies of the build process -->
     <buildtool_depend>catkin</buildtool_depend>
+
     <!-- depend: build, export, and execution dependency -->
+    <build_depend>cmake_clang_tools</build_depend>
     <depend>roscpp</depend>
-
     <depend>quadrotor_common</depend>
+    <depend>controller_interface</depend>
+    <depend>effort_controllers</depend>
+    <depend>angles</depend>
+    <depend>tf2_ros</depend>
 
-    <depend>gazebo</depend>
-    <depend>gazebo_ros</depend>
-    <depend>gazebo_ros_control</depend>
+    <exec_depend>robot_localization</exec_depend>
 
     <export>
-        <gazebo_ros_control plugin="${prefix}/quadrotor_hw_sim_plugin.xml"/>
-        <gazebo_ros gazebo_model_path="${prefix}/.."/>
+        <controller_interface plugin="${prefix}/quadrotor_controller_plugin.xml"/>
     </export>
 </package>

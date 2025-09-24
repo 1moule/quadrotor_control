@@ -16,6 +16,10 @@ bool QuadrotorHWSim::initSim(
   bool ret =
     DefaultRobotHWSim::initSim(robot_namespace, model_nh, parent_model, urdf_model, transmissions);
   gazebo_ros_control::DefaultRobotHWSim::registerInterface(&imu_sensor_interface_);
+  gazebo_ros_control::DefaultRobotHWSim::registerInterface(&wrench_interface_);
+  wrench_handle_ = std::make_shared<hardware_interface::QuadrotorWrenchHandle>(
+    "wrench", new geometry_msgs::Wrench());
+  wrench_interface_.registerHandle(*wrench_handle_);
   XmlRpc::XmlRpcValue xml_rpc_value;
 
   if (!model_nh.getParam("gazebo/imus", xml_rpc_value))
@@ -49,6 +53,8 @@ void QuadrotorHWSim::readSim(ros::Time time, ros::Duration period)
     imu.linear_acc[2] = accel.Z();
   }
 }
+
+void QuadrotorHWSim::writeSim(ros::Time time, ros::Duration period) {}
 
 void QuadrotorHWSim::parseImu(
   XmlRpc::XmlRpcValue & imuDatas, const gazebo::physics::ModelPtr & parentModel)

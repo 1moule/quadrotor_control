@@ -1,0 +1,11 @@
+<library path="lib/libquadrotor_controller">
+
+    <class name="quadrotor_controller/QuadrotorController"
+           type="quadrotor_controller::QuadrotorController"
+           base_class_type="controller_interface::ControllerBase">
+        <description>
+            The QuadrotorController is quadrotor controller.
+        </description>
+    </class>
+
+</library>
