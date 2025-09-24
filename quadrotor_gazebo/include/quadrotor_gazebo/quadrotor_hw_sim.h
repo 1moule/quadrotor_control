@@ -38,7 +38,11 @@ private:
   hardware_interface::ImuSensorInterface imu_sensor_interface_;
   hardware_interface::QuadrotorWrenchInterface wrench_interface_;
   std::shared_ptr<hardware_interface::QuadrotorWrenchHandle> wrench_handle_;
+
   gazebo::physics::WorldPtr world_;
+  gazebo::physics::ModelPtr model_;
+  gazebo::physics::LinkPtr link_;
+
   std::list<ImuData> imu_datas_;
   ros::ServiceServer switch_imu_service_;
 };

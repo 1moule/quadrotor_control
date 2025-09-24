@@ -23,7 +23,7 @@ void QuadrotorController::update(const ros::Time & time, const ros::Duration & p
   geometry_msgs::Wrench cmd;
   cmd.force.x = 0;
   cmd.force.y = 0;
-  cmd.force.z = 1.;
+  cmd.force.z = 15;
   cmd.torque.x = 0;
   cmd.torque.y = 0;
   cmd.torque.z = 0;

@@ -22,6 +22,10 @@ bool QuadrotorHWSim::initSim(
   wrench_interface_.registerHandle(*wrench_handle_);
   XmlRpc::XmlRpcValue xml_rpc_value;
 
+  // store parent model pointer
+  model_ = parent_model;
+  link_ = model_->GetLink("base_link");
+
   if (!model_nh.getParam("gazebo/imus", xml_rpc_value))
     ROS_WARN("No imu specified");
   else
@@ -54,7 +58,19 @@ void QuadrotorHWSim::readSim(ros::Time time, ros::Duration period)
   }
 }
 
-void QuadrotorHWSim::writeSim(ros::Time time, ros::Duration period) {}
+void QuadrotorHWSim::writeSim(ros::Time time, ros::Duration period)
+{
+  //  geometry_msgs::WrenchStamped wrench;
+  //  wrench.header.stamp = time;
+  //  wrench.header.frame_id = base_link_frame_;
+  //  wrench.wrench = wrench_output_->getCommand();
+  //  publisher_wrench_command_.publish(wrench);
+  auto wrench = wrench_handle_->getCommand();
+  ignition::math::Vector3d force(wrench.force.x, wrench.force.y, wrench.force.z);
+  ignition::math::Vector3d torque(wrench.torque.x, wrench.torque.y, wrench.torque.z);
+  link_->AddRelativeForce(force);
+  link_->AddRelativeTorque(torque - link_->GetInertial()->CoG().Cross(force));
+}
 
 void QuadrotorHWSim::parseImu(
   XmlRpc::XmlRpcValue & imuDatas, const gazebo::physics::ModelPtr & parentModel)
