@@ -38,12 +38,11 @@ void RosReferenceManager::preSolverRun(
         //        targetState(3) = initState(3) + cmdVel_.angular.x * time;
         //        targetState(4) = initState(4) + cmdVel_.angular.y * time;
         //        targetState(5) = initState(5) + cmdVel_.angular.z * time;
-        targetState(5) = cmdVel_.angular.z;
         targetState(6) = cmdVel_.linear.x;
         targetState(7) = cmdVel_.linear.y;
         //        targetState(8) = cmdVel_.linear.z;
-        //        targetState(9) = cmdVel_.linear.z;
-        //        targetState(10) = cmdVel_.angular.x;
+        //        targetState(9) = cmdVel_.angular.x;
+        //        targetState(10) = cmdVel_.angular.y;
         //        targetState(11) = cmdVel_.angular.z;
         return targetState;
       }();
