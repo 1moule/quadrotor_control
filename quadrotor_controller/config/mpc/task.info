@@ -122,12 +122,12 @@ Q
 ; control weight matrix
 R
 {
-  scaling 1e+1
+  scaling 1e+0
 
   (0,0)  1.0    ; Fz
   (1,1)  100.0   ; Mx
   (2,2)  100.0   ; My
-  (3,3)  150.0   ; Mz
+  (3,3)  200.0   ; Mz
 }
 
 
