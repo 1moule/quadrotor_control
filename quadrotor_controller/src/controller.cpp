@@ -41,7 +41,7 @@ void QuadrotorController::starting(const ros::Time & time)
   currentObservation_.input.setZero(ocs2::quadrotor::INPUT_DIM);
 
   ocs2::TargetTrajectories target_trajectories(
-    {currentObservation_.time}, {currentObservation_.state}, {currentObservation_.input});
+    {currentObservation_.time}, {quadrotor_interface_->getInitialState()}, {currentObservation_.input});
 
   // Set the first observation and command and wait for optimization to finish
   mpcMrtInterface_->setCurrentObservation(currentObservation_);
