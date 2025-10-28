@@ -17,9 +17,9 @@ RosReferenceManager::RosReferenceManager(
 void RosReferenceManager::preSolverRun(
   scalar_t initTime, scalar_t finalTime, const vector_t & initState)
 {
-  if (cmdVelUpdated_) {
-    std::lock_guard<std::mutex> lock(cmdVelMutex_);
-    cmdVelUpdated_ = false;
+  if (cmdTrajUpdated_) {
+    std::lock_guard<std::mutex> lock(cmdTrajMutex_);
+    cmdTrajUpdated_ = false;
 
     ocs2::scalar_array_t timeTrajectory;
     ocs2::vector_array_t stateTrajectory;
@@ -32,18 +32,24 @@ void RosReferenceManager::preSolverRun(
       scalar_t time = dt * static_cast<scalar_t>(i);
       const vector_t targetState = [&]() {
         vector_t targetState = vector_t::Zero(ocs2::quadrotor::STATE_DIM);
-        targetState(0) = initState(0) + cmdVel_.linear.x * time;
-        targetState(1) = initState(1) + cmdVel_.linear.y * time;
-        targetState(2) = cmdHeight_.data;
+        //        targetState(0) = initState(0) + cmdVel_.linear.x * time;
+        //        targetState(1) = initState(1) + cmdVel_.linear.y * time;
+        //        targetState(2) = cmdHeight_.data;
         //        targetState(3) = initState(3) + cmdVel_.angular.x * time;
         //        targetState(4) = initState(4) + cmdVel_.angular.y * time;
         //        targetState(5) = initState(5) + cmdVel_.angular.z * time;
-        targetState(6) = cmdVel_.linear.x;
-        targetState(7) = cmdVel_.linear.y;
+        //        targetState(6) = cmdVel_.linear.x;
+        //        targetState(7) = cmdVel_.linear.y;
         //        targetState(8) = cmdVel_.linear.z;
         //        targetState(9) = cmdVel_.angular.x;
         //        targetState(10) = cmdVel_.angular.y;
         //        targetState(11) = cmdVel_.angular.z;
+        targetState(0)=cmdTraj_.position.x;
+        targetState(1)=cmdTraj_.position.y;
+        targetState(2)=cmdTraj_.position.z;
+        targetState(6)=cmdTraj_.velocity.x;
+        targetState(7)=cmdTraj_.velocity.y;
+        targetState(8)=cmdTraj_.velocity.z;
         return targetState;
       }();
       timeTrajectory.push_back(initTime + time);
@@ -57,12 +63,12 @@ void RosReferenceManager::preSolverRun(
 
 void RosReferenceManager::subscribe(ros::NodeHandle & nodeHandle)
 {
-  auto cmdVelCallback = [this](const geometry_msgs::Twist::ConstPtr & msg) {
-    std::lock_guard<std::mutex> lock(cmdVelMutex_);
-    cmdVelUpdated_ = true;
-    cmdVel_ = *msg;
+  auto cmdTrajCallback = [this](const quadrotor_msgs::PositionCommand::ConstPtr & msg) {
+    std::lock_guard<std::mutex> lock(cmdTrajMutex_);
+    cmdTrajUpdated_ = true;
+    cmdTraj_ = *msg;
   };
-  cmdVelSubscriber_ = nodeHandle.subscribe<geometry_msgs::Twist>("/cmd_vel", 1, cmdVelCallback);
+  cmdTrajSubscriber_ = nodeHandle.subscribe<quadrotor_msgs::PositionCommand>("/planning/pos_cmd", 1, cmdTrajCallback);
 
   auto cmdHeightCallback = [this](const std_msgs::Float64::ConstPtr & msg) {
     std::lock_guard<std::mutex> lock(cmdHeightMutex_);

@@ -8,6 +8,7 @@
 #include <ocs2_oc/synchronized_module/ReferenceManagerDecorator.h>
 #include <ros/ros.h>
 #include <std_msgs/Float64.h>
+#include <quadrotor_msgs/PositionCommand.h>
 
 #include <memory>
 #include <string>
@@ -28,12 +29,12 @@ public:
   void preSolverRun(scalar_t initTime, scalar_t finalTime, const vector_t & initState) override;
 
 private:
-  ::ros::Subscriber cmdVelSubscriber_;
-  std::mutex cmdVelMutex_;
-  std::atomic_bool cmdVelUpdated_;
-  geometry_msgs::Twist cmdVel_;
+  ::ros::Subscriber cmdTrajSubscriber_;
+  std::mutex cmdTrajMutex_;
+  std::atomic_bool cmdTrajUpdated_;
+  quadrotor_msgs::PositionCommand cmdTraj_;
 
-  ::ros::Subscriber cmdHeightSubscriber_;
+  ros::Subscriber cmdHeightSubscriber_;
   std::mutex cmdHeightMutex_;
   std::atomic_bool cmdHeightUpdated_;
   std_msgs::Float64 cmdHeight_;

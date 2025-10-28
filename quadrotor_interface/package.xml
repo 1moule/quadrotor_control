@@ -18,6 +18,7 @@
     <depend>ocs2_mpc</depend>
     <depend>ocs2_ddp</depend>
     <depend>ocs2_quadrotor_ros</depend>
+    <depend>quadrotor_msgs</depend>
     <depend>pinocchio</depend>
 
 </package>

@@ -9,6 +9,7 @@ find_package(catkin REQUIRED
         ocs2_mpc
         ocs2_ddp
         ocs2_quadrotor_ros
+        quadrotor_msgs
 )
 
 find_package(Boost REQUIRED COMPONENTS
@@ -31,6 +32,7 @@ catkin_package(
         ocs2_mpc
         ocs2_ddp
         ocs2_quadrotor_ros
+        quadrotor_msgs
         DEPENDS
         pinocchio
 )
