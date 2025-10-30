@@ -1,0 +1,53 @@
+<launch>
+    <arg name="paused" default="false"/>
+    <arg name="add_wheel" default="true"/>
+    <arg name="laser_scan_min_height" default="0.0"/>
+    <arg name="laser_scan_max_height" default="0.1"/>
+
+    <rosparam file="$(find quadrotor_gazebo)/config/default.yaml" command="load"/>
+
+    <param name="robot_description"
+           command="$(find xacro)/xacro $(find quadrotor_description)/urdf/quadrotor_hokuyo_utm30lx.gazebo.xacro"/>
+
+    <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="paused" value="$(arg paused)"/>
+        <arg name="world_name" value="$(find quadrotor_gazebo)/worlds/test_world.world"/>
+    </include>
+
+    <!-- push robot_description to factory and spawn robot in gazebo -->
+    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" clear_params="true"
+          args="-z 0.25 -param robot_description -urdf -model quadrotor" output="screen"/>
+
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+
+    <!-- Convert 3D velodyne scan to laser scan -->
+    <node name="pointcloud_to_laserscan" pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node"
+          output="screen">
+        <remap from="cloud_in" to="/velodyne_points"/>
+        <remap from="scan" to="/scan"/>
+        <rosparam>
+            target_frame: velodyne # Leave disabled to output scan in pointcloud frame
+            transform_tolerance: 0.01
+            min_height: $(arg laser_scan_min_height)
+            max_height: $(arg laser_scan_max_height)
+
+            angle_min: -3.1415926 # -M_PI
+            angle_max: 3.1415926 # M_PI
+            angle_increment: 0.0087 # M_PI/360.0
+            scan_time: 0.03333
+            range_min: 0.1
+            range_max: 50.0
+            use_inf: true
+            inf_epsilon: 1.0
+
+            # Concurrency level, affects number of pointclouds queued for processing and number of threads used
+            # 0 : Detect number of cores
+            # 1 : Single threaded
+            # 2->inf : Parallelism level
+            concurrency_level: 1
+        </rosparam>
+    </node>
+
+</launch>
+
